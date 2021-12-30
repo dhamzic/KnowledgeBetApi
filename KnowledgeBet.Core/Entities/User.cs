@@ -11,5 +11,6 @@ namespace KnowledgeBet.Core.Entities
         public long Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        //public ICollection<Game> GamesPlayed { get; set; }
     }
 }

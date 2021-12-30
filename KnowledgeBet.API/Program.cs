@@ -13,7 +13,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<QuizDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        assembly => assembly.MigrationsAssembly(typeof(QuizDbContext).Assembly.FullName));
+
 });
 
 var app = builder.Build();

@@ -42,9 +42,17 @@ namespace KnowledgeBet.Infrastructure
                 throw;
             }
         }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionOption> QuestionOption { get; set; }
+        public DbSet<Subcategory> Subcategories { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
         }
-        public DbSet<User> Users { get; set; }
     }
 }
