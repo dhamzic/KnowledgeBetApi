@@ -37,6 +37,21 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.ToTable("GameQuestion");
                 });
 
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.Property<int>("GamesPlayedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GamesPlayedId", "PlayersId");
+
+                    b.HasIndex("PlayersId");
+
+                    b.ToTable("GameUser");
+                });
+
             modelBuilder.Entity("KnowledgeBet.Core.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -65,19 +80,33 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SubcategoryIdId")
+                    b.HasKey("Id");
+
+                    b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameWon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<long>("WinnerId")
-                        .HasColumnType("bigint");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("GamePlayedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubcategoryIdId");
+                    b.HasIndex("GamePlayedId")
+                        .IsUnique();
 
-                    b.HasIndex("WinnerId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Games");
+                    b.ToTable("GamesWon");
                 });
 
             modelBuilder.Entity("KnowledgeBet.Core.Entities.Question", b =>
@@ -108,7 +137,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -130,7 +159,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -146,11 +175,11 @@ namespace KnowledgeBet.Infrastructure.Migrations
 
             modelBuilder.Entity("KnowledgeBet.Core.Entities.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -195,32 +224,45 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.Game", b =>
+            modelBuilder.Entity("GameUser", b =>
                 {
-                    b.HasOne("KnowledgeBet.Core.Entities.Subcategory", "SubcategoryId")
-                        .WithMany("Games")
-                        .HasForeignKey("SubcategoryIdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KnowledgeBet.Core.Entities.User", "Winner")
+                    b.HasOne("KnowledgeBet.Core.Entities.Game", null)
                         .WithMany()
-                        .HasForeignKey("WinnerId")
+                        .HasForeignKey("GamesPlayedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SubcategoryId");
+                    b.HasOne("KnowledgeBet.Core.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("PlayersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Navigation("Winner");
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameWon", b =>
+                {
+                    b.HasOne("KnowledgeBet.Core.Entities.Game", "GamePlayed")
+                        .WithOne("GameWon")
+                        .HasForeignKey("KnowledgeBet.Core.Entities.GameWon", "GamePlayedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KnowledgeBet.Core.Entities.User", "User")
+                        .WithMany("GamesWon")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GamePlayed");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KnowledgeBet.Core.Entities.QuestionOption", b =>
                 {
                     b.HasOne("KnowledgeBet.Core.Entities.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Options")
+                        .HasForeignKey("QuestionId");
 
                     b.Navigation("Question");
                 });
@@ -229,9 +271,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 {
                     b.HasOne("KnowledgeBet.Core.Entities.Category", "Category")
                         .WithMany("Subcategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -256,9 +296,20 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.Navigation("Subcategories");
                 });
 
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.Subcategory", b =>
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.Game", b =>
                 {
-                    b.Navigation("Games");
+                    b.Navigation("GameWon")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.Question", b =>
+                {
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.User", b =>
+                {
+                    b.Navigation("GamesWon");
                 });
 #pragma warning restore 612, 618
         }

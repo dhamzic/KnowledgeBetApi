@@ -23,6 +23,19 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Games",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Games", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -39,7 +52,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -56,7 +69,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,6 +78,29 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         name: "FK_Subcategories_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameQuestion",
+                columns: table => new
+                {
+                    GamesId = table.Column<int>(type: "int", nullable: false),
+                    QuestionsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameQuestion", x => new { x.GamesId, x.QuestionsId });
+                    table.ForeignKey(
+                        name: "FK_GameQuestion_Games_GamesId",
+                        column: x => x.GamesId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GameQuestion_Questions_QuestionsId",
+                        column: x => x.QuestionsId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -77,7 +113,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                    QuestionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,32 +122,54 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         name: "FK_QuestionOption_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GamesWon",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    GamePlayedId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GamesWon", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GamesWon_Games_GamePlayedId",
+                        column: x => x.GamePlayedId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GamesWon_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Games",
+                name: "GameUser",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SubcategoryIdId = table.Column<int>(type: "int", nullable: false),
-                    WinnerId = table.Column<long>(type: "bigint", nullable: false)
+                    GamesPlayedId = table.Column<int>(type: "int", nullable: false),
+                    PlayersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Games", x => x.Id);
+                    table.PrimaryKey("PK_GameUser", x => new { x.GamesPlayedId, x.PlayersId });
                     table.ForeignKey(
-                        name: "FK_Games_Subcategories_SubcategoryIdId",
-                        column: x => x.SubcategoryIdId,
-                        principalTable: "Subcategories",
+                        name: "FK_GameUser_Games_GamesPlayedId",
+                        column: x => x.GamesPlayedId,
+                        principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Games_Users_WinnerId",
-                        column: x => x.WinnerId,
+                        name: "FK_GameUser_Users_PlayersId",
+                        column: x => x.PlayersId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -141,44 +199,26 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "GameQuestion",
-                columns: table => new
-                {
-                    GamesId = table.Column<int>(type: "int", nullable: false),
-                    QuestionsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameQuestion", x => new { x.GamesId, x.QuestionsId });
-                    table.ForeignKey(
-                        name: "FK_GameQuestion_Games_GamesId",
-                        column: x => x.GamesId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GameQuestion_Questions_QuestionsId",
-                        column: x => x.QuestionsId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_GameQuestion_QuestionsId",
                 table: "GameQuestion",
                 column: "QuestionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Games_SubcategoryIdId",
-                table: "Games",
-                column: "SubcategoryIdId");
+                name: "IX_GamesWon_GamePlayedId",
+                table: "GamesWon",
+                column: "GamePlayedId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Games_WinnerId",
-                table: "Games",
-                column: "WinnerId");
+                name: "IX_GamesWon_UserId",
+                table: "GamesWon",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameUser_PlayersId",
+                table: "GameUser",
+                column: "PlayersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionOption_QuestionId",
@@ -202,6 +242,12 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 name: "GameQuestion");
 
             migrationBuilder.DropTable(
+                name: "GamesWon");
+
+            migrationBuilder.DropTable(
+                name: "GameUser");
+
+            migrationBuilder.DropTable(
                 name: "QuestionOption");
 
             migrationBuilder.DropTable(
@@ -211,13 +257,13 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Subcategories");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");

@@ -8,11 +8,15 @@ namespace KnowledgeBet.Core.Entities
 {
     public class Subcategory
     {
+        public Subcategory()
+        {
+            this.Questions = new HashSet<Question>();
+        }
         public int Id { get; set; }
         public string Name { get; set; }
-        public Category Category { get; set; }
-        public ICollection<Question> Questions { get; set; }
-        public ICollection<Game> Games { get; set; }
+        public Nullable<int> CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
 
     }
 }

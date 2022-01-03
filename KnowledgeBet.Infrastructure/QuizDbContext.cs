@@ -45,14 +45,22 @@ namespace KnowledgeBet.Infrastructure
 
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<QuestionOption> QuestionOption { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionOption> QuestionOption { get; set; }
+        public DbSet<GameWon> GamesWon { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Game>()
+            .HasOne(a => a.GameWon)
+            .WithOne(a => a.GamePlayed)
+            .HasForeignKey<GameWon>(c => c.GamePlayedId);
 
+            modelBuilder.Entity<GameWon>()
+                .HasIndex(g => g.GamePlayedId).IsUnique();
         }
     }
 }
