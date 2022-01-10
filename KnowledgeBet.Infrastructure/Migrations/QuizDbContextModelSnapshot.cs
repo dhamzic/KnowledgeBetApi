@@ -37,21 +37,6 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.ToTable("GameQuestion");
                 });
 
-            modelBuilder.Entity("GameUser", b =>
-                {
-                    b.Property<int>("GamesPlayedId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlayersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GamesPlayedId", "PlayersId");
-
-                    b.HasIndex("PlayersId");
-
-                    b.ToTable("GameUser");
-                });
-
             modelBuilder.Entity("KnowledgeBet.Core.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -85,28 +70,24 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameWon", b =>
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("GamePlayedId")
+                    b.Property<int>("GameId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("HasWon")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
-                    b.HasIndex("GamePlayedId")
-                        .IsUnique();
+                    b.HasKey("GameId", "UserId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GamesWon");
+                    b.ToTable("GameUser");
                 });
 
             modelBuilder.Entity("KnowledgeBet.Core.Entities.Question", b =>
@@ -224,38 +205,19 @@ namespace KnowledgeBet.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameUser", b =>
+            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameUser", b =>
                 {
                     b.HasOne("KnowledgeBet.Core.Entities.Game", null)
                         .WithMany()
-                        .HasForeignKey("GamesPlayedId")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KnowledgeBet.Core.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("PlayersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.GameWon", b =>
-                {
-                    b.HasOne("KnowledgeBet.Core.Entities.Game", "GamePlayed")
-                        .WithOne("GameWon")
-                        .HasForeignKey("KnowledgeBet.Core.Entities.GameWon", "GamePlayedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KnowledgeBet.Core.Entities.User", "User")
-                        .WithMany("GamesWon")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("GamePlayed");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KnowledgeBet.Core.Entities.QuestionOption", b =>
@@ -296,20 +258,9 @@ namespace KnowledgeBet.Infrastructure.Migrations
                     b.Navigation("Subcategories");
                 });
 
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.Game", b =>
-                {
-                    b.Navigation("GameWon")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("KnowledgeBet.Core.Entities.Question", b =>
                 {
                     b.Navigation("Options");
-                });
-
-            modelBuilder.Entity("KnowledgeBet.Core.Entities.User", b =>
-                {
-                    b.Navigation("GamesWon");
                 });
 #pragma warning restore 612, 618
         }

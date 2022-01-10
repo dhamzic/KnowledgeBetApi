@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KnowledgeBet.Infrastructure.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class m2m : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -126,50 +126,25 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GamesWon",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    GamePlayedId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GamesWon", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GamesWon_Games_GamePlayedId",
-                        column: x => x.GamePlayedId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GamesWon_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "GameUser",
                 columns: table => new
                 {
-                    GamesPlayedId = table.Column<int>(type: "int", nullable: false),
-                    PlayersId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    HasWon = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameUser", x => new { x.GamesPlayedId, x.PlayersId });
+                    table.PrimaryKey("PK_GameUser", x => new { x.GameId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_GameUser_Games_GamesPlayedId",
-                        column: x => x.GamesPlayedId,
+                        name: "FK_GameUser_Games_GameId",
+                        column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameUser_Users_PlayersId",
-                        column: x => x.PlayersId,
+                        name: "FK_GameUser_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -205,20 +180,9 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 column: "QuestionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GamesWon_GamePlayedId",
-                table: "GamesWon",
-                column: "GamePlayedId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GamesWon_UserId",
-                table: "GamesWon",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GameUser_PlayersId",
+                name: "IX_GameUser_UserId",
                 table: "GameUser",
-                column: "PlayersId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionOption_QuestionId",
@@ -240,9 +204,6 @@ namespace KnowledgeBet.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "GameQuestion");
-
-            migrationBuilder.DropTable(
-                name: "GamesWon");
 
             migrationBuilder.DropTable(
                 name: "GameUser");

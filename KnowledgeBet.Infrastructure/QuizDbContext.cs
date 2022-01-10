@@ -49,18 +49,31 @@ namespace KnowledgeBet.Infrastructure
         public DbSet<Category> Categories { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionOption> QuestionOption { get; set; }
-        public DbSet<GameWon> GamesWon { get; set; }
-        
+        //public DbSet<GameWon> GamesWon { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Game>()
-            .HasOne(a => a.GameWon)
-            .WithOne(a => a.GamePlayed)
-            .HasForeignKey<GameWon>(c => c.GamePlayedId);
+            //Povezivanje User-a i Game-a unutar među tablice
+            //1. Identifikacija veze direktno između User-a i Game-a
 
-            modelBuilder.Entity<GameWon>()
-                .HasIndex(g => g.GamePlayedId).IsUnique();
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.GamesPlayed)
+                .WithMany(g => g.Players)
+                //Među tablica
+                .UsingEntity<GameUser>
+                (gu => gu.HasOne<Game>().WithMany(),
+                gu => gu.HasOne<User>().WithMany())
+                .Property(gu => gu.HasWon)
+                .HasDefaultValue(false);
+
+            //modelBuilder.Entity<Game>()
+            //.HasOne(a => a.GameWon)
+            //.WithOne(a => a.GamePlayed)
+            //.HasForeignKey<GameWon>(c => c.GamePlayedId);
+
+            //modelBuilder.Entity<GameWon>()
+            //    .HasIndex(g => g.GamePlayedId).IsUnique();
         }
     }
 }

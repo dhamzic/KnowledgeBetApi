@@ -18,6 +18,6 @@ namespace KnowledgeBet.Core.Entities
         public DateTime Date { get; set; }
         public virtual ICollection<User> Players { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
-        public virtual GameWon GameWon { get; set; }
+        //public virtual GameWon GameWon { get; set; }
     }
 }
