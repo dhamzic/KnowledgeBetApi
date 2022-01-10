@@ -27,5 +27,14 @@ namespace KnowledgeBet.API.Controllers
             var players = knowledgeBetService.GetAllPlayers();
             return Ok(players);
         }
+
+        [HttpGet("", Name = "GetAllPlayedGames")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult GetAllPlayedGames()
+        {
+            var playedGames = knowledgeBetService.GetAllPlayedGames();
+            return Ok(playedGames);
+        }
     }
 }

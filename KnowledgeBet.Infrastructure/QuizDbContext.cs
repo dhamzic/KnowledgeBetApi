@@ -49,7 +49,7 @@ namespace KnowledgeBet.Infrastructure
         public DbSet<Category> Categories { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionOption> QuestionOption { get; set; }
-        //public DbSet<GameWon> GamesWon { get; set; }
+        public DbSet<GameUser> GamesByUser { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

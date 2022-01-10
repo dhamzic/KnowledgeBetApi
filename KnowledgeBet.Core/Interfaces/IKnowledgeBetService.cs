@@ -10,5 +10,6 @@ namespace KnowledgeBet.Core.Interfaces
     public interface IKnowledgeBetService
     {
         List<UserDTO> GetAllPlayers();
+        List<GameDTO> GetAllPlayedGames();
     }
 }

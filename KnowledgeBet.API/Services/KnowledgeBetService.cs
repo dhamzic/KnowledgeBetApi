@@ -41,5 +41,42 @@ namespace KnowledgeBet.API.Services
 
             return users;
         }
+
+        public List<GameDTO> GetAllPlayedGames()
+        {
+            var dbGames = dbContext.Games.ToList();
+            var dbPlayers = dbContext.Users.ToList();
+            var dbGameByUser = dbContext.GamesByUser.ToList();
+            var games = new List<GameDTO>();
+
+            foreach (var dbGame in dbGames)
+            {
+                try
+                {
+                    games.Add(new GameDTO
+                    {
+                        Players = dbPlayers
+                            .Where(p => dbGameByUser.Any(id => id.UserId == p.Id))
+                            .Select(u => new UserDTO { FirstName = u.FirstName, LastName = u.LastName })
+                            .ToList(),
+                        Date = dbGame.Date,
+                        Winner = dbPlayers
+                            .Where(p => p.Id == dbGameByUser.Where(gu => gu.HasWon == true && gu.GameId == dbGame.Id).Select(gu => gu.UserId).Single())
+                            .Select(u => new UserDTO
+                            {
+                                FirstName = u.FirstName,
+                                LastName = u.LastName
+                            })
+                            .Single()
+                    });
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "GetAllPlayedGames error while fetching data");
+                }
+            }
+
+            return games;
+        }
     }
 }
