@@ -1,3 +1,5 @@
+using KnowledgeBet.API.Services;
+using KnowledgeBet.Core.Interfaces;
 using KnowledgeBet.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,8 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
         assembly => assembly.MigrationsAssembly(typeof(QuizDbContext).Assembly.FullName));
 
 });
+
+builder.Services.AddScoped<IKnowledgeBetService, KnowledgeBetService>();
 
 var app = builder.Build();
 
