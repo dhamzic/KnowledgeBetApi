@@ -1,4 +1,4 @@
-﻿namespace KnowledgeBet.API.Models
+﻿namespace KnowledgeBet.API.Api.V1.Models
 {
     public class ChartModel
     {

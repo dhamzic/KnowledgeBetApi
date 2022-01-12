@@ -1,4 +1,4 @@
-﻿using KnowledgeBet.API.Models;
+﻿using KnowledgeBet.API.Api.V1.Models;
 using Microsoft.AspNetCore.SignalR;
 
 namespace KnowledgeBet.API.HubConfig

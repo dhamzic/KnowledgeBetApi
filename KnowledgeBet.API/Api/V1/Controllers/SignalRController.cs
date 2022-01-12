@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
-namespace KnowledgeBet.API.Controllers
+namespace KnowledgeBet.API.Api.V1.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1/[controller]/[action]")]

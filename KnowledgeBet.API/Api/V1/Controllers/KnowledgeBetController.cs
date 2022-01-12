@@ -2,11 +2,12 @@
 using KnowledgeBet.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KnowledgeBet.API.Controllers
+namespace KnowledgeBet.API.Api.V1.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[action]")]
+    [Produces("application/json")]
     public class KnowledgeBetController : ControllerBase
     {
         private readonly ILogger logger;
@@ -20,6 +21,7 @@ namespace KnowledgeBet.API.Controllers
             this.knowledgeBetService = knowledgeBetService;
         }
 
+        [MapToApiVersion("1.0")]
         [HttpGet("", Name = "GetAllPlayers")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -29,6 +31,7 @@ namespace KnowledgeBet.API.Controllers
             return Ok(players);
         }
 
+        [MapToApiVersion("1.0")]
         [HttpGet("", Name = "GetAllPlayedGames")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,6 +41,7 @@ namespace KnowledgeBet.API.Controllers
             return Ok(playedGames);
         }
 
+        [MapToApiVersion("1.0")]
         [HttpPost("", Name = "CreateNewQuestion")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
