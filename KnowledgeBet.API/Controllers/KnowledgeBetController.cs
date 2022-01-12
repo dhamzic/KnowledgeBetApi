@@ -1,4 +1,5 @@
 ﻿using KnowledgeBet.Core.Interfaces;
+using KnowledgeBet.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBet.API.Controllers
@@ -35,6 +36,14 @@ namespace KnowledgeBet.API.Controllers
         {
             var playedGames = knowledgeBetService.GetAllPlayedGames();
             return Ok(playedGames);
+        }
+
+        [HttpPost("", Name = "CreateNewQuestion")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult CreateNewQuestion()
+        {
+            return Ok();
         }
     }
 }

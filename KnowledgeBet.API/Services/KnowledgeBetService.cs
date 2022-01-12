@@ -1,4 +1,5 @@
-﻿using KnowledgeBet.Core.Interfaces;
+﻿using KnowledgeBet.Core.Entities;
+using KnowledgeBet.Core.Interfaces;
 using KnowledgeBet.Core.Models;
 using KnowledgeBet.Infrastructure;
 using Newtonsoft.Json.Linq;
@@ -75,8 +76,14 @@ namespace KnowledgeBet.API.Services
                     logger.LogError(ex, "GetAllPlayedGames error while fetching data");
                 }
             }
-
             return games;
+        }
+
+        public bool CreateNewQuestion(QuestionDTO question)
+        {
+           
+
+            return true;
         }
     }
 }

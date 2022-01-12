@@ -11,5 +11,6 @@ namespace KnowledgeBet.Core.Interfaces
     {
         List<UserDTO> GetAllPlayers();
         List<GameDTO> GetAllPlayedGames();
+        bool CreateNewQuestion(QuestionDTO question);
     }
 }
