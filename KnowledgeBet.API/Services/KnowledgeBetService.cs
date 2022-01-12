@@ -82,7 +82,6 @@ namespace KnowledgeBet.API.Services
         public bool CreateNewQuestion(QuestionDTO question)
         {
            
-
             return true;
         }
     }
