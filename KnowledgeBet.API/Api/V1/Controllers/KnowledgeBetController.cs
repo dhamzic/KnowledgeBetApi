@@ -48,7 +48,27 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> CreateNewQuestion([FromBody] NewQuestionRequestModel newQuestionRequestModel)
         {
-            return Ok();
+            try
+            {
+                var newQuestionDTO = new NewQuestionDTO
+                {
+                    Text = newQuestionRequestModel.Text,
+                    SubcategoryId = newQuestionRequestModel.SubcategoryId,
+                    Options = newQuestionRequestModel.Options.Select(o => new QuestionOptionDTO
+                    {
+                        Text = o.Text,
+                        IsCorrect = o.IsCorrect
+                    }).ToList()
+                };
+
+                var createdQuestion = await knowledgeBetService.CreateNewQuestion(newQuestionDTO);
+                logger.LogDebug("Question successfully created", newQuestionRequestModel.Text);
+                return Ok(createdQuestion);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
         }
     }
 }

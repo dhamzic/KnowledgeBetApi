@@ -51,6 +51,10 @@ namespace KnowledgeBet.Infrastructure
         public DbSet<QuestionOption> QuestionOption { get; set; }
         public DbSet<GameUser> GamesByUser { get; set; }
 
+        protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -50,6 +50,19 @@ namespace KnowledgeBet.API.Services
             var dbGameByUser = dbContext.GamesByUser.ToList();
             var games = new List<GameDTO>();
 
+            #region Execution Method Poiners
+            //Single očekuje točno jedan rezultat.Ako se vrati više, bacit će error
+            //First dohvaća samo prvi match od 0..*
+
+            //First / Single / Last će baciti error ukoliko se ne dohvati ni jedan podatak
+            //FirstOrDefault / SingleOrDefault / LastOrDefault će vratiti null, ako se ne vrati ni jedan podatak
+            #endregion
+
+            #region Paging
+            //Skip(0).Take(10)
+            //Skip(10).Take(10)
+            #endregion
+
             foreach (var dbGame in dbGames)
             {
                 try
@@ -79,10 +92,45 @@ namespace KnowledgeBet.API.Services
             return games;
         }
 
-        public bool CreateNewQuestion(QuestionDTO question)
+        public async Task<bool> CreateNewQuestion(NewQuestionDTO newQuestionDTO)
         {
-           
-            return true;
+            using var transaction = dbContext.Database.BeginTransaction();
+
+            var question = new Core.Entities.Question
+            {
+                Text = newQuestionDTO.Text
+            };
+            
+            try
+            {
+                dbContext.Questions.Add(question);
+                dbContext.Save();
+                int newQuestionId = question.Id;
+
+                List<QuestionOption> newQuestionOptions = new List<QuestionOption>();
+                foreach (var questionOption in newQuestionDTO.Options)
+                {
+                    newQuestionOptions.Add(new QuestionOption
+                    {
+                        QuestionId = newQuestionId,
+                        Text = questionOption.Text,
+                        IsCorrect = questionOption.IsCorrect
+                    });
+                }
+                dbContext.QuestionOption.AddRange(newQuestionOptions);
+                dbContext.SaveChanges();
+
+                logger.LogInformation("Question saved: {@config}", question);
+
+                transaction.Commit();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Error while saving new question: {@config}", ex.Message);
+                throw new Exception("Error while saving new question: {@config}." + ex.Message);
+            }
         }
     }
 }

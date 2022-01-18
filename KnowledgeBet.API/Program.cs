@@ -33,8 +33,8 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
 {
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        assembly => assembly.MigrationsAssembly(typeof(QuizDbContext).Assembly.FullName));
-
+        assembly => assembly.MigrationsAssembly(typeof(QuizDbContext).Assembly.FullName))
+    .LogTo(Console.WriteLine);
 });
 
 builder.Services.AddScoped<IKnowledgeBetService, KnowledgeBetService>();
