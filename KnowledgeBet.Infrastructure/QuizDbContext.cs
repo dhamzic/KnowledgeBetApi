@@ -71,13 +71,7 @@ namespace KnowledgeBet.Infrastructure
                 .Property(gu => gu.HasWon)
                 .HasDefaultValue(false);
 
-            //modelBuilder.Entity<Game>()
-            //.HasOne(a => a.GameWon)
-            //.WithOne(a => a.GamePlayed)
-            //.HasForeignKey<GameWon>(c => c.GamePlayedId);
-
-            //modelBuilder.Entity<GameWon>()
-            //    .HasIndex(g => g.GamePlayedId).IsUnique();
+            modelBuilder.Entity<Question>(q=>q.Property(a=>a.Active).HasDefaultValue(true));
         }
     }
 }

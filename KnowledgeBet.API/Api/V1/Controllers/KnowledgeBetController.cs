@@ -70,5 +70,48 @@ namespace KnowledgeBet.API.Api.V1.Controllers
                 return this.StatusCode(500, ex.Message);
             }
         }
+
+        [MapToApiVersion("1.0")]
+        [HttpPost("", Name = "CreateNewGame")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> CreateNewGame([FromBody] NewGameRequestModel newGameRequestModel)
+        {
+            try
+            {
+                var newGameDto = new NewGameDTO
+                {
+                    Date = newGameRequestModel.Date,
+                    PlayersId = newGameRequestModel.PlayersId,
+                    QuestionsId = newGameRequestModel.QuestionsId
+                };
+
+                var createdQuestion = await knowledgeBetService.CreateNewGame(newGameDto);
+                logger.LogDebug("Game successfully created", createdQuestion);
+                return Ok(createdQuestion);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
+        }
+
+        [MapToApiVersion("1.0")]
+        [HttpDelete("", Name = "DeleteQuestion")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteQuestion([FromBody] int questionId)
+        {
+            try
+            {
+                var deletedQuestion = await knowledgeBetService.DeleteQuestion(questionId);
+                logger.LogDebug("Question successfully deleted", deletedQuestion);
+                return Ok(deletedQuestion);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
+        }
     }
 }

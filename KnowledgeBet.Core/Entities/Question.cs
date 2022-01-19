@@ -16,6 +16,7 @@ namespace KnowledgeBet.Core.Entities
         }
         public int Id { get; set; }
         public string Text { get; set; }
+        public bool Active { get; set; }
         public virtual ICollection<Subcategory> Subcategories { get; set; }
         public virtual ICollection<QuestionOption> Options { get; set; }
         public virtual ICollection<Game> Games { get; set; }
