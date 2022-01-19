@@ -197,9 +197,9 @@ namespace KnowledgeBet.API.Services
                     dbContext.Questions.Remove(question);
                     dbContext.Save();
                     transaction.Commit();
-                    return true;
 
                     logger.LogInformation("Question deleted: {@question}", question);
+                    return true;
                 }
                 else
                 {
@@ -210,6 +210,29 @@ namespace KnowledgeBet.API.Services
             {
                 logger.LogInformation("Error while deleting question: {@ex.Message}", ex.Message);
                 throw new Exception("Error while deleting question: " + ex.Message);
+            }
+        }
+        public async Task<bool> DeactivateQuestion(int questionId)
+        {
+            using var transaction = dbContext.Database.BeginTransaction();
+
+            try
+            {
+                var question = dbContext.Questions
+                    .Where(q => q.Id == questionId)
+                    .First();
+
+                question.Active = false;
+                dbContext.Save();
+                transaction.Commit();
+
+                logger.LogInformation("Question deactivated: {@question}", question);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Error while deactivating the question: {@ex.Message}", ex.Message);
+                throw new Exception("Error while deactivating the question: " + ex.Message);
             }
         }
     }

@@ -113,5 +113,23 @@ namespace KnowledgeBet.API.Api.V1.Controllers
                 return this.StatusCode(500, ex.Message);
             }
         }
+
+        [MapToApiVersion("1.0")]
+        [HttpPut("", Name = "DeactivateQuestion")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeactivateQuestion([FromBody] int questionId)
+        {
+            try
+            {
+                var deactivatedQuestion = await knowledgeBetService.DeactivateQuestion(questionId);
+                logger.LogDebug("Question successfully deactivated", deactivatedQuestion);
+                return Ok(deactivatedQuestion);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
+        }
     }
 }

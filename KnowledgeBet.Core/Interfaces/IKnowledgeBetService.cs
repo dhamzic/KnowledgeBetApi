@@ -13,7 +13,9 @@ namespace KnowledgeBet.Core.Interfaces
         List<GameDTO> GetAllPlayedGames();
         Task<bool> CreateNewQuestion(NewQuestionDTO newQuestion);
         Task<bool> CreateNewGame(NewGameDTO newGame);
-        Task<bool> DeleteQuestion(int questionId); 
+        Task<bool> DeleteQuestion(int questionId);
+        Task<bool> DeactivateQuestion(int questionId);
+
 
 
     }
