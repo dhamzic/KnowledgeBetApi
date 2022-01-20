@@ -110,24 +110,9 @@ namespace KnowledgeBet.API.Services
                 int newGameId = newGame.Id;
 
                 //Winner
-                dbContext.GamesByUser.Add(new GameUser
-                {
-                    GameId = newGameId,
-                    UserId = newGameDTO.PlayerWinnerId,
-                    HasWon = true
-                });
+                var winner = dbContext.GamesByUser.Where(gu => gu.GameId == newGameId && gu.UserId == newGameDTO.PlayerWinnerId).First();
+                winner.HasWon = true;
 
-                //Other players
-                var otherPlayersInGame = dbPlayersInGame.Where(p => dbPlayersInGame.Select(pg => pg.Id).Contains(newGameDTO.PlayerWinnerId)).ToList();
-                foreach (var otherPlayer in otherPlayersInGame)
-                {
-                    dbContext.GamesByUser.Add(new GameUser
-                    {
-                        GameId = newGameId,
-                        UserId = otherPlayer.Id,
-                        HasWon = false
-                    });
-                }
                 dbContext.Save();
                 transaction.Commit();
             }

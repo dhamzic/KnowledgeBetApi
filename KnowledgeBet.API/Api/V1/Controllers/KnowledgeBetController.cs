@@ -83,7 +83,8 @@ namespace KnowledgeBet.API.Api.V1.Controllers
                 {
                     Date = newGameRequestModel.Date,
                     PlayersId = newGameRequestModel.PlayersId,
-                    QuestionsId = newGameRequestModel.QuestionsId
+                    QuestionsId = newGameRequestModel.QuestionsId,
+                    PlayerWinnerId = newGameRequestModel.WinnerId
                 };
 
                 var createdQuestion = await knowledgeBetService.CreateNewGame(newGameDto);

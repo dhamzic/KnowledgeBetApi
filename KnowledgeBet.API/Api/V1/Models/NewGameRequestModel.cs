@@ -5,5 +5,6 @@
         public DateTime Date { get; set; }
         public List<int> PlayersId { get; set; }
         public List<int> QuestionsId { get; set; }
+        public int WinnerId { get; set; }
     }
 }
