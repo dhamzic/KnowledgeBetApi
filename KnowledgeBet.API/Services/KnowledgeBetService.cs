@@ -69,14 +69,14 @@ namespace KnowledgeBet.API.Services
                 {
                     games.Add(new GameDTO
                     {
-                        Players = dbGame.Players.Select(u => new UserDTO { FirstName = u.FirstName, LastName = u.LastName }).ToList(),
+                        Players = dbGame.Players.Select(u => new UserDTO { FirstName = u.User.FirstName, LastName = u.User.LastName }).ToList(),
                         Date = dbGame.Date,
                         Winner = dbGame.Players
-                            .Where(p => p.Id == dbGameByUser.Where(gu => gu.HasWon == true && gu.GameId == dbGame.Id).Select(gu => gu.UserId).Single())
+                            .Where(p => p.User.Id == dbGameByUser.Where(gu => gu.HasWon == true && gu.GameId == dbGame.Id).Select(gu => gu.UserId).Single())
                             .Select(u => new UserDTO
                             {
-                                FirstName = u.FirstName,
-                                LastName = u.LastName
+                                FirstName = u.User.FirstName,
+                                LastName = u.User.LastName
                             })
                             .Single()
                     });
@@ -95,24 +95,30 @@ namespace KnowledgeBet.API.Services
 
             try
             {
+
                 var dbPlayersInGame = dbContext.Users.Where(p => newGameDTO.PlayersId.Contains(p.Id)).ToList();
                 var dbQuestions = dbContext.Questions.ToList();
 
-                var newGame = new Game
+                var gamePlayed = new Game
                 {
                     Date = newGameDTO.Date,
-                    Players = dbPlayersInGame,
                     Questions = dbQuestions.Where(p => newGameDTO.QuestionsId.Contains(p.Id)).ToList()
                 };
+                List<GameUser> gameUserList = new List<GameUser>();
 
-                dbContext.Games.Add(newGame);
-                dbContext.Save();
-                int newGameId = newGame.Id;
+                foreach (var player in dbPlayersInGame)
+                {
+                    bool hasWon = newGameDTO.PlayerWinnerId == player.Id ? true : false;
 
-                //Winner
-                var winner = dbContext.GamesByUser.Where(gu => gu.GameId == newGameId && gu.UserId == newGameDTO.PlayerWinnerId).First();
-                winner.HasWon = true;
+                    gameUserList.Add(new GameUser
+                    {
+                        User = player,
+                        Game = gamePlayed,
+                        HasWon = hasWon
+                    });
+                }
 
+                dbContext.GamesByUser.AddRange(gameUserList);
                 dbContext.Save();
                 transaction.Commit();
             }

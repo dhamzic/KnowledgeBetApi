@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KnowledgeBet.Infrastructure.Migrations
 {
-    public partial class m2m : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,7 +41,8 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -126,24 +127,24 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameUser",
+                name: "GamesByUser",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
-                    HasWon = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    HasWon = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameUser", x => new { x.GameId, x.UserId });
+                    table.PrimaryKey("PK_GamesByUser", x => new { x.UserId, x.GameId });
                     table.ForeignKey(
-                        name: "FK_GameUser_Games_GameId",
+                        name: "FK_GamesByUser_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GameUser_Users_UserId",
+                        name: "FK_GamesByUser_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -180,9 +181,9 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 column: "QuestionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameUser_UserId",
-                table: "GameUser",
-                column: "UserId");
+                name: "IX_GamesByUser_GameId",
+                table: "GamesByUser",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionOption_QuestionId",
@@ -206,7 +207,7 @@ namespace KnowledgeBet.Infrastructure.Migrations
                 name: "GameQuestion");
 
             migrationBuilder.DropTable(
-                name: "GameUser");
+                name: "GamesByUser");
 
             migrationBuilder.DropTable(
                 name: "QuestionOption");

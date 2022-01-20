@@ -58,18 +58,23 @@ namespace KnowledgeBet.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GameUser>().HasKey(table => new {
+                table.UserId,
+                table.GameId
+            });
+
             //Povezivanje User-a i Game-a unutar među tablice
             //1. Identifikacija veze direktno između User-a i Game-a
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.GamesPlayed)
-                .WithMany(g => g.Players)
-                //Među tablica
-                .UsingEntity<GameUser>
-                (gu => gu.HasOne<Game>().WithMany(),
-                gu => gu.HasOne<User>().WithMany())
-                .Property(gu => gu.HasWon)
-                .HasDefaultValue(false);
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.GamesPlayed)
+            //    .WithMany(g => g.Players)
+            //    //Među tablica
+            //    .UsingEntity<GameUser>
+            //    (gu => gu.HasOne<Game>().WithMany(),
+            //    gu => gu.HasOne<User>().WithMany())
+            //    .Property(gu => gu.HasWon)
+            //    .HasDefaultValue(false);
 
             modelBuilder.Entity<Question>(q=>q.Property(a=>a.Active).HasDefaultValue(true));
         }

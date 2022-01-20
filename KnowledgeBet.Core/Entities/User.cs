@@ -11,13 +11,13 @@ namespace KnowledgeBet.Core.Entities
     {
         public User()
         {
-            this.GamesPlayed = new HashSet<Game>();
+            this.GamesPlayed = new HashSet<GameUser>();
         }
         public int Id { get; set; }
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-        public virtual ICollection<Game> GamesPlayed { get; set; }
+        public virtual ICollection<GameUser> GamesPlayed { get; set; }
 
     }
 }
