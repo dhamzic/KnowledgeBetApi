@@ -1,8 +1,8 @@
+using Domain.Interfaces.Repositories;
+using Infrastructure.Database;
 using KnowledgeBet.API.HubConfig;
 using KnowledgeBet.API.Services;
 using KnowledgeBet.API.Swagger;
-using KnowledgeBet.Core.Interfaces;
-using KnowledgeBet.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swaconnectionStringshbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDbContext<QuizDbContext>(options =>

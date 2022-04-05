@@ -1,6 +1,6 @@
-﻿using KnowledgeBet.API.Api.V1.Models;
-using KnowledgeBet.Core.Interfaces;
-using KnowledgeBet.Core.Models;
+﻿using Domain.Entities.Models;
+using Domain.Interfaces.Repositories;
+using KnowledgeBet.API.Api.V1.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBet.API.Api.V1.Controllers
@@ -11,15 +11,15 @@ namespace KnowledgeBet.API.Api.V1.Controllers
     [Produces("application/json")]
     public class KnowledgeBetController : ControllerBase
     {
-        private readonly ILogger logger;
-        private readonly IKnowledgeBetService knowledgeBetService;
+        private readonly ILogger _logger;
+        private readonly IKnowledgeBetService _knowledgeBetService;
 
         public KnowledgeBetController(
             ILogger<KnowledgeBetController> logger,
             IKnowledgeBetService knowledgeBetService)
         {
-            this.logger = logger;
-            this.knowledgeBetService = knowledgeBetService;
+            this._logger = logger;
+            this._knowledgeBetService = knowledgeBetService;
         }
 
         [MapToApiVersion("1.0")]
@@ -28,7 +28,7 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult GetAllPlayers()
         {
-            var players = knowledgeBetService.GetAllPlayers();
+            var players = _knowledgeBetService.GetAllPlayers();
             return Ok(players);
         }
 
@@ -38,7 +38,7 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult GetAllPlayedGames()
         {
-            var playedGames = knowledgeBetService.GetAllPlayedGames();
+            var playedGames = _knowledgeBetService.GetAllPlayedGames();
             return Ok(playedGames);
         }
 
@@ -50,19 +50,19 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         {
             try
             {
-                var newQuestionDTO = new NewQuestionDTO
+                var newQuestionDTO = new NewQuestionModel
                 {
                     Text = newQuestionRequestModel.Text,
                     SubcategoryId = newQuestionRequestModel.SubcategoryId,
-                    Options = newQuestionRequestModel.Options.Select(o => new QuestionOptionDTO
+                    Options = newQuestionRequestModel.Options.Select(o => new QuestionOptionModel
                     {
                         Text = o.Text,
                         IsCorrect = o.IsCorrect
                     }).ToList()
                 };
 
-                var createdQuestion = await knowledgeBetService.CreateNewQuestion(newQuestionDTO);
-                logger.LogDebug("Question successfully created", newQuestionRequestModel.Text);
+                var createdQuestion = await _knowledgeBetService.CreateNewQuestion(newQuestionDTO);
+                _logger.LogDebug("Question successfully created", newQuestionRequestModel.Text);
                 return Ok(createdQuestion);
             }
             catch (Exception ex)
@@ -79,7 +79,7 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         {
             try
             {
-                var newGameDto = new NewGameDTO
+                var newGameDto = new NewGameModel
                 {
                     Date = newGameRequestModel.Date,
                     PlayersId = newGameRequestModel.PlayersId,
@@ -87,8 +87,8 @@ namespace KnowledgeBet.API.Api.V1.Controllers
                     PlayerWinnerId = newGameRequestModel.WinnerId
                 };
 
-                var createdQuestion = await knowledgeBetService.CreateNewGame(newGameDto);
-                logger.LogDebug("Game successfully created", createdQuestion);
+                var createdQuestion = await _knowledgeBetService.CreateNewGame(newGameDto);
+                _logger.LogDebug("Game successfully created", createdQuestion);
                 return Ok(createdQuestion);
             }
             catch (Exception ex)
@@ -105,8 +105,8 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         {
             try
             {
-                var deletedQuestion = await knowledgeBetService.DeleteQuestion(questionId);
-                logger.LogDebug("Question successfully deleted", deletedQuestion);
+                var deletedQuestion = await _knowledgeBetService.DeleteQuestion(questionId);
+                _logger.LogDebug("Question successfully deleted", deletedQuestion);
                 return Ok(deletedQuestion);
             }
             catch (Exception ex)
@@ -123,8 +123,8 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         {
             try
             {
-                var deactivatedQuestion = await knowledgeBetService.DeactivateQuestion(questionId);
-                logger.LogDebug("Question successfully deactivated", deactivatedQuestion);
+                var deactivatedQuestion = await _knowledgeBetService.DeactivateQuestion(questionId);
+                _logger.LogDebug("Question successfully deactivated", deactivatedQuestion);
                 return Ok(deactivatedQuestion);
             }
             catch (Exception ex)

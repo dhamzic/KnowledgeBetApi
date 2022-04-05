@@ -1,4 +1,4 @@
-﻿using KnowledgeBet.Core.Interfaces;
+﻿using Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnowledgeBet.API.Api.V2.Controllers

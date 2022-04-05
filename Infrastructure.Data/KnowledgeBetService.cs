@@ -1,9 +1,13 @@
-﻿using KnowledgeBet.Core.Entities;
-using KnowledgeBet.Core.Interfaces;
-using KnowledgeBet.Core.Models;
-using KnowledgeBet.Infrastructure;
+﻿using Domain.Entities.Models;
+using Domain.Interfaces.Repositories;
+using Infrastructure.Database;
+using Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace KnowledgeBet.API.Services
 {
@@ -20,16 +24,16 @@ namespace KnowledgeBet.API.Services
             this.logger = logger;
         }
 
-        public List<UserDTO> GetAllPlayers()
+        public async Task<List<UserModel>> GetAllPlayers()
         {
             var dbUsers = dbContext.Users.ToList();
-            var users = new List<UserDTO>();
+            var users = new List<UserModel>();
 
             foreach (var dbConfig in dbUsers)
             {
                 try
                 {
-                    users.Add(new UserDTO
+                    users.Add(new UserModel
                     {
                         FirstName = dbConfig.FirstName,
                         LastName = dbConfig.LastName
@@ -44,11 +48,11 @@ namespace KnowledgeBet.API.Services
             return users;
         }
 
-        public List<GameDTO> GetAllPlayedGames()
+        public async Task<List<GameModel>> GetAllPlayedGames()
         {
             var dbGamesWithUsers = dbContext.Games.Include(u => u.Players).ToList();
             var dbGameByUser = dbContext.GamesByUser.ToList();
-            var games = new List<GameDTO>();
+            var games = new List<GameModel>();
 
             #region Execution Method Poiners
             //Single očekuje točno jedan rezultat.Ako se vrati više, bacit će error
@@ -67,13 +71,13 @@ namespace KnowledgeBet.API.Services
             {
                 try
                 {
-                    games.Add(new GameDTO
+                    games.Add(new GameModel
                     {
-                        Players = dbGame.Players.Select(u => new UserDTO { FirstName = u.User.FirstName, LastName = u.User.LastName }).ToList(),
+                        Players = dbGame.Players.Select(u => new UserModel { FirstName = u.User.FirstName, LastName = u.User.LastName }).ToList(),
                         Date = dbGame.Date,
                         Winner = dbGame.Players
                             .Where(p => p.User.Id == dbGameByUser.Where(gu => gu.HasWon == true && gu.GameId == dbGame.Id).Select(gu => gu.UserId).Single())
-                            .Select(u => new UserDTO
+                            .Select(u => new UserModel
                             {
                                 FirstName = u.User.FirstName,
                                 LastName = u.User.LastName
@@ -89,7 +93,7 @@ namespace KnowledgeBet.API.Services
             return games;
         }
 
-        public async Task<bool> CreateNewGame(NewGameDTO newGameDTO)
+        public async Task<bool> CreateNewGame(NewGameModel newGameDTO)
         {
             using var transaction = dbContext.Database.BeginTransaction();
 
@@ -130,7 +134,7 @@ namespace KnowledgeBet.API.Services
             return true;
         }
 
-        public async Task<bool> CreateNewQuestion(NewQuestionDTO newQuestionDTO)
+        public async Task<bool> CreateNewQuestion(NewQuestionModel newQuestionDTO)
         {
             using var transaction = dbContext.Database.BeginTransaction();
 
