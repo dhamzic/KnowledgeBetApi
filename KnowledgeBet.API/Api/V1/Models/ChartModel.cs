@@ -5,9 +5,10 @@
         public List<int> Data { get; set; }
         public string Label { get; set; }
 
-        public ChartModel()
+        public ChartModel(List<int> data, string label="")
         {
-            Data = new List<int>();
+            Data = data;
+            Label = label;
         }
     }
 }

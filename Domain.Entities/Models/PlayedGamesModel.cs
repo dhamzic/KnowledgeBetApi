@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Models
 {
-    public class UserModel
+    public class PlayedGamesModel : GameModel
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public List<UserModel> Players { get; set; }
+        public UserModel Winner { get; set; }
     }
 }

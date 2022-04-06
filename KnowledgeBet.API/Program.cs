@@ -1,7 +1,7 @@
 using Domain.Interfaces.Repositories;
+using Infrastructure.Data;
 using Infrastructure.Database;
 using KnowledgeBet.API.HubConfig;
-using KnowledgeBet.API.Services;
 using KnowledgeBet.API.Swagger;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +37,9 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
     .LogTo(Console.WriteLine);
 });
 
-builder.Services.AddScoped<IKnowledgeBetService, KnowledgeBetService>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 
 // API and Swagger
 builder.Services.AddApiVersioning(options =>

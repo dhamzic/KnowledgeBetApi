@@ -8,8 +8,9 @@ namespace Domain.Entities.Models
 {
     public class QuestionModel
     {
+        public int Id { get; set;}
         public string Text { get; set; }
-        public virtual List<SubcategoryModel> Subcategories { get; set; }
-        public virtual List<QuestionOptionModel> Options { get; set; }
+        public List<SubcategoryModel> Subcategories { get; set; }
+        public List<QuestionOptionModel> Options { get; set; }
     }
 }

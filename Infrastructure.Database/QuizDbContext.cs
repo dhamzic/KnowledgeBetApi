@@ -19,25 +19,6 @@ namespace Infrastructure.Database
             this.logger = logger;
         }
 
-        public void Save()
-        {
-            try
-            {
-                SaveChanges();
-                logger.LogInformation("Object saved to database");
-            }
-            catch (DbUpdateException ex)
-            {
-                logger.LogError(ex, "Db update exception");
-                throw;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Db update exception");
-                throw;
-            }
-        }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }

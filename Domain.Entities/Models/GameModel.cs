@@ -8,8 +8,7 @@ namespace Domain.Entities.Models
 {
     public class GameModel
     {
-        public List<UserModel> Players { get; set; }
-        public UserModel Winner { get; set; }
+        public int Id { get; set; }
         public DateTime Date { get; set; }
     }
 }
