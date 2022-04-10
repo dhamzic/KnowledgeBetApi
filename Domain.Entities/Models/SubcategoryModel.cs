@@ -8,6 +8,6 @@ namespace Domain.Entities.Models
 {
     public class SubcategoryModel
     {
-        public CategoryModel Category { get; set; }
+        public string Name { get; set; }
     }
 }

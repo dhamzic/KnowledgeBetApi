@@ -9,5 +9,6 @@ namespace Domain.Entities.Models
     public class CategoryModel
     {
         public string Name { get; set; }
+        public List<SubcategoryModel> Subcategories { get; set; }
     }
 }
