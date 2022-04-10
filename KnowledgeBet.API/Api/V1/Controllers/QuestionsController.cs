@@ -61,6 +61,36 @@ namespace KnowledgeBet.API.Api.V1.Controllers
             }
         }
 
+        [HttpGet("{subcategoryId}/")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetQuestionsFromSpecificCategoryResponse))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult<GetQuestionsFromSpecificCategoryResponse>> GetQuestionsFromSpecificCategory([FromRoute] int subcategoryId)
+        {
+            try
+            {
+                _logger.LogInformation("GetQuestionsFromSpecificCategory method has been called");
+
+                var result = await _questionRepository.GetQuestions(subcategoryId);
+
+                var retVal = new GetQuestionsFromSpecificCategoryResponse()
+                {
+                    Data = result,
+                    Status = ResponseStatus.Success
+                };
+
+                return this.Ok(retVal);
+
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new BaseResponse()
+                {
+                    Status = ResponseStatus.UnhandledException,
+                    LogMessage = ex.Message
+                });
+            }
+        }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<QuestionModel>> GetQuestion(int id)

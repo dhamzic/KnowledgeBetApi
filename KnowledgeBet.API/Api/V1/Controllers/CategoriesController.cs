@@ -25,30 +25,28 @@ namespace KnowledgeBet.API.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<GetCategoriesResponse>> GetCategories()
         {
+            try
             {
-                try
+                _logger.LogInformation("GetCategories method has been called");
+
+                var result = await _categoryRepository.GetCategories();
+
+                var retVal = new GetCategoriesResponse()
                 {
-                    _logger.LogInformation("GetCategories method has been called");
+                    Data = result,
+                    Status = ResponseStatus.Success
+                };
 
-                    var result = await _categoryRepository.GetCategories();
+                return this.Ok(retVal);
 
-                    var retVal = new GetCategoriesResponse()
-                    {
-                        Data = result,
-                        Status = ResponseStatus.Success
-                    };
-
-                    return this.Ok(retVal);
-
-                }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new BaseResponse()
                 {
-                    return this.BadRequest(new BaseResponse()
-                    {
-                        Status = ResponseStatus.UnhandledException,
-                        LogMessage = ex.Message
-                    });
-                }
+                    Status = ResponseStatus.UnhandledException,
+                    LogMessage = ex.Message
+                });
             }
         }
     }

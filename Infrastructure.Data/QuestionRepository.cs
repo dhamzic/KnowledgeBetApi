@@ -38,7 +38,7 @@ namespace Infrastructure.Data
                     cfg.CreateMap<Category, CategoryModel>();
                 });
 
-                var mapper = new Mapper(config);  
+                var mapper = new Mapper(config);
 
                 var question = new Question
                 {
@@ -161,6 +161,37 @@ namespace Infrastructure.Data
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error - GetQuestion");
+                throw;
+            }
+        }
+
+        public async Task<List<QuestionModel>> GetQuestions(int subcategoryId)
+        {
+            try
+            {
+                var dbQuestions = _dbContext.Questions
+                    .Where(q => q.Subcategories.Select(s => s.Id).Contains(subcategoryId))
+                    .Include(q => q.Subcategories)
+                    .ThenInclude(q => q.Category)
+                    .ToList();
+
+                var questionsModel = dbQuestions.Select(async (x) =>
+                    {
+                        return new QuestionModel
+                        {
+                            Text = x.Text,
+                            Category = x.Subcategories.ElementAt(0).Category.Name,
+                            Subcategory = x.Subcategories.ElementAt(0).Name
+                        };
+                    })
+                    .Select(t => t.Result)
+                    .ToList();
+
+                return questionsModel;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error - GetQuestions");
                 throw;
             }
         }

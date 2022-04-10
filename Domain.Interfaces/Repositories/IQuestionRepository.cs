@@ -14,5 +14,7 @@ namespace Domain.Interfaces.Repositories
         Task DeactivateQuestion(int questionId);
         Task<QuestionModel> GetQuestion(int id);
 
+        Task<List<QuestionModel>> GetQuestions(int subcategoryId);
+
     }
 }
