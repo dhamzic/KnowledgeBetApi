@@ -11,12 +11,12 @@ namespace Infrastructure.Database
 {
     public class QuizDbContext : DbContext
     {
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
 
         public QuizDbContext(DbContextOptions<QuizDbContext> options, ILogger<QuizDbContext> logger)
             : base(options)
         {
-            this.logger = logger;
+            this._logger = logger;
         }
 
         public DbSet<User> Users { get; set; }

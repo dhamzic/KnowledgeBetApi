@@ -1,7 +1,7 @@
 using Domain.Interfaces.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Database;
-using KnowledgeBet.API.HubConfig;
+using KnowledgeBet.API.Api.V1.Models.SignalR;
 using KnowledgeBet.API.Swagger;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +70,7 @@ builder.Services.AddVersionedApiExplorer(options =>
 
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     // add a custom operation filter which sets default values
@@ -106,6 +107,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChartHub>("/chart");
+app.MapHub<AppHub>("/appHub");
 
 app.Run();

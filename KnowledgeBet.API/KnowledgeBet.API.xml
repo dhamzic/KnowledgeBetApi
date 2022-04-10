@@ -4,6 +4,14 @@
         <name>KnowledgeBet.API</name>
     </assembly>
     <members>
+        <member name="M:KnowledgeBet.API.Api.V1.Models.SignalR.AppHub.SendMessage(System.String,System.String)">
+            <summary>
+            Primanje poruke od klijenta (frontend)
+            </summary>
+            <param name="user"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
         <member name="T:KnowledgeBet.API.Swagger.ConfigureSwaggerOptions">
             <summary>
             Configures the Swagger generation options.

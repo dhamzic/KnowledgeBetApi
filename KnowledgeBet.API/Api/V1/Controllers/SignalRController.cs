@@ -1,29 +1,28 @@
-﻿using KnowledgeBet.API.HubConfig;
+﻿using KnowledgeBet.API.Api.V1.Models.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace KnowledgeBet.API.Api.V1.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/sockets")]
     [ApiController]
     public class SignalRController : ControllerBase
     {
-        private IHubContext<ChartHub> _hub;
+        private readonly IHubContext<AppHub> _hub;
 
-        public SignalRController(IHubContext<ChartHub> hub)
+        public SignalRController(IHubContext<AppHub> hub)
         {
             _hub = hub;
         }
 
-        [HttpGet("", Name = "GetSignalR")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("send-message-to-frontend")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult GetSignalR()
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult> SendMessage([FromBody] Message message)
         {
-            _hub.Clients.All.SendAsync("transferData", "Server Message");
-
-            return Ok(new { Message = "Request Completed" });
+            await _hub.Clients.All.SendAsync("transferTilesData", message.User + message.Text);
+            return this.Ok(new { Message = "Request Completed" });
         }
     }
 }

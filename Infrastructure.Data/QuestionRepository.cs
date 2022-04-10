@@ -54,7 +54,7 @@ namespace Infrastructure.Data
                 _dbContext.SaveChanges();
                 int newQuestionId = question.Id;
 
-                List<QuestionOption> newQuestionOptions = new List<QuestionOption>();
+                List<QuestionOption> newQuestionOptions = new();
                 foreach (var questionOption in newQuestion.Options)
                 {
                     newQuestionOptions.Add(new QuestionOption

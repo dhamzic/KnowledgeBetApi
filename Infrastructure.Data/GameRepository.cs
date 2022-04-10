@@ -46,11 +46,11 @@ namespace Infrastructure.Data
                     Date = date,
                     Questions = dbQuestions.Where(p => questions.Contains(p.Id)).ToList()
                 };
-                List<GameUser> gameUserList = new List<GameUser>();
+                List<GameUser> gameUserList = new();
 
                 foreach (var player in dbPlayersInGame)
                 {
-                    bool hasWon = winner == player.Id ? true : false;
+                    bool hasWon = winner == player.Id;
 
                     gameUserList.Add(new GameUser
                     {
