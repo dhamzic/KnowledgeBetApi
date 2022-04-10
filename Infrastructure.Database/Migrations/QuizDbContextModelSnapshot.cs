@@ -87,6 +87,25 @@ namespace Infrastructure.Database.Migrations
                     b.ToTable("GamesByUser");
                 });
 
+            modelBuilder.Entity("Infrastructure.Database.Entities.HomeComponentTile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Route")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HomeComponentTiles");
+                });
+
             modelBuilder.Entity("Infrastructure.Database.Entities.Question", b =>
                 {
                     b.Property<int>("Id")

@@ -43,6 +43,7 @@ builder.Services.AddDbContext<QuizDbContext>(options =>
     .LogTo(Console.WriteLine);
 });
 
+builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();

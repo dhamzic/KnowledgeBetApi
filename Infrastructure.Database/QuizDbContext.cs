@@ -27,6 +27,8 @@ namespace Infrastructure.Database
         public DbSet<QuestionOption> QuestionOption { get; set; }
         public DbSet<GameUser> GamesByUser { get; set; }
 
+        public DbSet<HomeComponentTile> HomeComponentTiles { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();

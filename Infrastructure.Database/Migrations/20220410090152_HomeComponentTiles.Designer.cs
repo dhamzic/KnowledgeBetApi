@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(QuizDbContext))]
-    [Migration("20220405173344_Initial-Migration")]
-    partial class InitialMigration
+    [Migration("20220410090152_HomeComponentTiles")]
+    partial class HomeComponentTiles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,25 @@ namespace Infrastructure.Database.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("GamesByUser");
+                });
+
+            modelBuilder.Entity("Infrastructure.Database.Entities.HomeComponentTile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Route")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HomeComponentTiles");
                 });
 
             modelBuilder.Entity("Infrastructure.Database.Entities.Question", b =>
