@@ -61,7 +61,7 @@ namespace KnowledgeBet.API.Api.V1.Controllers
             }
         }
 
-        [HttpGet("{subcategoryId}/")]
+        [HttpGet("subcategory/{subcategoryId}")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetQuestionsFromSpecificCategoryResponse))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<GetQuestionsFromSpecificCategoryResponse>> GetQuestionsFromSpecificCategory([FromRoute] int subcategoryId)
@@ -98,7 +98,7 @@ namespace KnowledgeBet.API.Api.V1.Controllers
             return await _questionRepository.GetQuestion(id);
         }
 
-        [HttpDelete("{questionId}/delete")]
+        [HttpDelete("delete/{questionId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
         public async Task<ActionResult> DeleteQuestion([FromRoute] int questionId)

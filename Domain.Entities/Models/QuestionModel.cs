@@ -10,8 +10,8 @@ namespace Domain.Entities.Models
     {
         public int Id { get; set;}
         public string Text { get; set; }
-        public string Category { get; set; }
-        public string Subcategory { get; set; }
+        public CategoryModel Category { get; set; }
+        public SubcategoryModel Subcategory { get; set; }
         public List<SubcategoryModel> Subcategories { get; set; }
         public List<QuestionOptionModel> Options { get; set; }
     }

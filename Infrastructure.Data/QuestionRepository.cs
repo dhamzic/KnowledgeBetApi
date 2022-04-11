@@ -179,9 +179,17 @@ namespace Infrastructure.Data
                     {
                         return new QuestionModel
                         {
+                            Id = x.Id,
                             Text = x.Text,
-                            Category = x.Subcategories.ElementAt(0).Category.Name,
-                            Subcategory = x.Subcategories.ElementAt(0).Name
+                            Category = new CategoryModel
+                            {
+                                Name = x.Subcategories.ElementAt(0).Category.Name
+                            },
+                            Subcategory = new SubcategoryModel
+                            {
+                                Id = x.Subcategories.ElementAt(0).Id,
+                                Name = x.Subcategories.ElementAt(0).Name
+                            }
                         };
                     })
                     .Select(t => t.Result)
